@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -67,4 +68,35 @@ public class Model {
 		return String.format("Grafo creato con %d vertici e %d archi", this.grafo.vertexSet().size(), this.grafo.edgeSet().size());
 	}
 	
+	public Set<Team> getTeams() {
+		return this.classifica.keySet();
+	}
+	
+	public List<ElementoClassifica> getTeamMigliori(Team team) {
+		List<ElementoClassifica> semiClassifica = new ArrayList<>();
+		ElementoClassifica teamScelto = new ElementoClassifica(team, this.classifica.get(team));
+		
+		for(Team t : this.classifica.keySet()) {
+			Integer diff = this.classifica.get(t)-teamScelto.getDiffPunti();
+			
+			if(diff>0) 
+				semiClassifica.add(new ElementoClassifica(t, diff));	
+		}
+		
+		return semiClassifica;
+	}
+	
+	public List<ElementoClassifica> getTeamPeggiori(Team team) {
+		List<ElementoClassifica> semiClassifica = new ArrayList<>();
+		ElementoClassifica teamScelto = new ElementoClassifica(team, this.classifica.get(team));
+		
+		for(Team t : this.classifica.keySet()) {
+			Integer diff = this.classifica.get(t)-teamScelto.getDiffPunti();
+			
+			if(diff<0) 
+				semiClassifica.add(new ElementoClassifica(t, -diff));	
+		}
+		
+		return semiClassifica;
+	}
 }
