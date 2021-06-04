@@ -53,7 +53,12 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	
+    	String result = this.model.creaGrafo();
+    	this.txtResult.appendText(result);
+    	
+    	this.btnClassifica.setDisable(false);
     }
 
     @FXML
