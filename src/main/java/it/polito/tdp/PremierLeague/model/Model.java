@@ -18,6 +18,7 @@ public class Model {
 	private Map<Team, Integer> classifica;
 	private PremierLeagueDAO dao;
 	private SimpleDirectedWeightedGraph<Team, DefaultWeightedEdge> grafo;
+	private List<Match> matches;
 	
 	public Model() {
 		this.idMapTeam = new HashMap<>();
@@ -29,7 +30,7 @@ public class Model {
 	public String creaGrafo() {
 		this.grafo = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 		this.classifica = new HashMap<>();
-		List<Match> matches = new ArrayList<>(this.dao.listAllMatches(idMapTeam));
+		this.matches = new ArrayList<>(this.dao.listAllMatches(idMapTeam));
 		
 		Graphs.addAllVertices(this.grafo, this.idMapTeam.values());
 		
@@ -98,5 +99,9 @@ public class Model {
 		}
 		
 		return semiClassifica;
+	}
+	
+	public List<Match> getAllMatches() {
+		return this.matches;
 	}
 }

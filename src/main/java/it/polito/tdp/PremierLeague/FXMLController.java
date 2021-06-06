@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.ElementoClassifica;
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Simulatore;
 import it.polito.tdp.PremierLeague.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 	
 	private Model model;
+	private Simulatore simulatore;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -76,8 +78,6 @@ public class FXMLController {
     	this.txtResult.appendText("SQUADRE PEGGIORI: \n");
     	for(ElementoClassifica e : teamPeggiori)
     		this.txtResult.appendText(e.toString()+"\n");
-    	
-    	this.btnSimula.setDisable(false);
     }
 
     @FXML
@@ -88,6 +88,7 @@ public class FXMLController {
     	this.txtResult.appendText(result);
     	
     	this.btnClassifica.setDisable(false);
+    	this.btnSimula.setDisable(false);
     	
     	List<Team> allTeams = new ArrayList<>(this.model.getTeams());
     	Collections.sort(allTeams);
@@ -97,7 +98,26 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	
+    	Integer N;
+    	Integer X;
+    	
+    	try {
+    		N = Integer.parseInt(this.txtN.getText());
+    		X = Integer.parseInt(this.txtX.getText());
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.appendText("Fromato dei dati inseriti (N e/o X) non corretto");
+    		return;
+    	}
+    	
+    	this.simulatore = new Simulatore();
+    	this.simulatore.init(N, X, model);
+    	this.simulatore.simula();
+    	
+    	this.txtResult.appendText("Numero di reporter medi per partita durante la simulazione: "+this.simulatore.getReporterMedi()+"\n\n");
+    	this.txtResult.appendText("Numero di partite critiche (reporter totali minori di X): "+this.simulatore.getNumeroPartiteCritiche()+"\n\n");
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
